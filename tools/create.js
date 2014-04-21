@@ -1,9 +1,11 @@
+#!/usr/bin/env node
 var fs = require('fs'),
 	path = require('path');
 
 if (process.argv.length < 3) {
-	console.log('usage: create [name]');
-	process.exit(1);
+	console.log('usage: create <args> [name]');
+	console.log('--dir, -d specify a sub-folder to create the project inside')
+    process.exit(1);
 }
 
 var templates = {
@@ -21,8 +23,23 @@ var templates = {
 	}
 };
 
-var title = process.argv[2],
-	dir = process.cwd() + path.sep + title,
+var title = null,
+    root = null;
+
+var args = process.argv.slice(2), arg;
+while (args.length) {
+    arg = args.shift();
+    switch (arg) {
+        case '--dir':
+        case '-d':
+            root = requiredArg();
+            break;
+        default:
+            title = arg;
+    }
+}
+
+var	dir = process.cwd() +  (!!root ? path.sep + root : '') + path.sep + title,
     pathHTMLOut = dir + path.sep + title + '.' + templates.html.extension,
     pathJSOut = dir + path.sep + title + '.' + templates.js.extension,
     pathCSSOut = dir + path.sep + title + '.' + templates.css.extension ;
@@ -77,4 +94,9 @@ function endOnError (err) {
 function endOnSuccess () {
     console.info('project created!');
     process.exit(0);
+}
+
+function requiredArg() {
+    if (args.length) return args.shift();
+    endOnError(arg + ' requires an argument');
 }

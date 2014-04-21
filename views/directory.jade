@@ -1,0 +1,11 @@
+doctype html
+html(lang="en")
+    head
+        title= 'Fractal Demo Directory'
+        script(type='text/javascript').
+    body
+        h1 Fractal Demo -- Directory
+        ul
+        each val, index in demos
+            li
+                a(href=val.url) #{val.title}
