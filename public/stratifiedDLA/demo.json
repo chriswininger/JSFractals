@@ -1,0 +1,4 @@
+{
+    "title": "stratifiedDLA",
+    "description": "A demonstration of the Diffusion Limited Algorithm implemented in JavaScript, with the colors of the dots stratified into different starting regions"
+}

@@ -51,13 +51,21 @@ function buildDirectory (complete) {
                 if (err) return complete(err, rtn);
 
                 if (stats.isDirectory()) {
-                    rtn.push({
-                        title: prj,
-                        url: projectUrl + '/' + prj + '/' + prj + '.html'
+                    fs.readdir(prjPath + path.sep + prj, function (err, files) {
+                        if (err) complete(err, rtn);
+                        if (_.contains(files, 'demo.json')) {
+                            rtn.push({
+                                title: prj,
+                                url: projectUrl + '/' + prj + '/' + prj + '.html'
+                            });
+                        }
+                        _processed();
                     });
+                } else {
+                    _processed();
                 }
 
-                _processed();
+
             });
         });
     });

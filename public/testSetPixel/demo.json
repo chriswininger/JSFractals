@@ -1,0 +1,4 @@
+{
+    "title": "testSetPixel",
+    "description": "Runs through different methods of setting a single pixel on a canvas to determine the fastest approach"
+}
