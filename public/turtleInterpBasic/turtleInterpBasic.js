@@ -7,15 +7,10 @@
 	$(function () {
 		console.log('here');
 		var display = $('#dlaCanvas')[0];
-		fieldWidth = display.width || display.scrollWidth;
-		fieldHeight = display.height || display.scrollHeight;
-
-        ctx = display.getContext("2d");
-
         var turtleEnging = new phong.lsystems.TurtleEngine(
-            ctx, 'F-F-F-F', { F: 'F-F+F+FF-F-F+F' },
+            display, 'F-F-F-F', { F: 'F-F+F+FF-F-F+F' },
             {
-                x: 100,
+                x: 130,
                 y: 100,
                 heading: 90,
                 unitLength: 200,

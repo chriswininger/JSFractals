@@ -26,8 +26,11 @@
       }
     };
 
-    function TurtleEngine (ctx, axiom, productionRules, state, rewriteMode) {
-        this.ctx = ctx;
+    function TurtleEngine (display, axiom, productionRules, state, rewriteMode) {
+        this.fieldWidth = display.width || display.scrollWidth;
+        this.fieldHeight = display.height || display.scrollHeight;
+        this.ctx = display.getContext("2d");
+
         this.axiom = axiom;
         this.productionRules = productionRules;
 
@@ -41,6 +44,10 @@
     _.extend(TurtleEngine.prototype, {
         drawLine: function (x1, y1, x2, y2) {
             var fill = this.ctx.fillStyle;
+
+            // draw line as those origin is at bottom left
+            y1 = this.fieldHeight - y1;
+            y2 = this.fieldHeight - y2;
 
             this.ctx.fillStyle = lineColor;
             this.ctx.beginPath();
