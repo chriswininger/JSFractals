@@ -26,7 +26,7 @@
       }
     };
 
-    function TurtleEngine (display, axiom, productionRules, state, rewriteMode) {
+    function TurtleEngine (display, axiom, productionRules, commandLength, state, rewriteMode) {
         this.fieldWidth = display.width || display.scrollWidth;
         this.fieldHeight = display.height || display.scrollHeight;
         this.ctx = display.getContext("2d");
@@ -34,6 +34,7 @@
         this.axiom = axiom;
         this.productionRules = productionRules;
 
+        this.commandLength = commandLength;
         this.commandString = this.axiom;
         this.rewriteMode = rewriteMode || this.RewriteModes.lineReplacement;
         this.initialState = state;
@@ -60,16 +61,30 @@
         interpreteTurtle: function () {
             var self = this;
             _.each(this.commandString, function (command) {
-                if (!commands[command]) return console.error('invalid character in command string');
-                commands[command].call(self);
+                // just ignore commands with no meaning
+                if (commands[command]) {
+                    commands[command].call(self);
+                }
             });
         },
         applyRewrite: function () {
             var newCommandString = '';
             var self = this;
+
+            var buffer = '';
             _.each(this.commandString, function (command) {
-                // perform replacesment or assume one to one
-                newCommandString += self.productionRules[command] || command;
+                buffer += command;
+                if (buffer.length === self.commandLength) {
+                    if (self.productionRules[buffer]) {
+                        // perform replacement or assume one to one
+                        newCommandString += self.productionRules[buffer];
+                        buffer = '';
+                    } else {
+                        // shift the buffer a char and push that char onto string
+                        newCommandString += buffer[0];
+                        buffer = buffer.slice(1);
+                    }
+                }
             });
             this.commandString = newCommandString;
         },
@@ -81,6 +96,7 @@
             }
         },
         reset: function () {
+            this.ctx.clearRect(0, 0, this.fieldWidth, this.fieldHeight);
             this.commandString = this.axiom;
             this.setFromState(this.initialState);
         },
